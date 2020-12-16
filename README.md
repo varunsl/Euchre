@@ -1,4 +1,4 @@
-# Farmers Market Finder
+# Euchre
 
 This is a web app I made in 2017 to play Euchre.
 
