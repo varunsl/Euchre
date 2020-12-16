@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Euchre Online</title>
+  <link rel="stylesheet" href="../static/styles.css">
+  <link rel="icon" href="../static/favicon.ico">
+</head>
+<body>
+  <h1>Euchre Online</h1>
+  <fieldset>
+  <legend>Join Game</legend>
+    <form action="/" method="POST">
+      <input type="text" name="nickname" placeholder="Nickname">
+  		<input type="text" name="gameID" placeholder="Game ID">
+      <input type="submit" value="Play">
+    </form>
+    <br>
+    {% if message is defined %}
+    <p class="message">{{ message }}</p>
+    <br>
+    {% endif %}
+  	<p>Leave 'Game ID' field blank to create a new game.</p>
+  </fieldset>
+</body>
+</html>

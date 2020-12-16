@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Euchre</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../static/styles.css">
+  <link rel="icon" href="../static/favicon.ico">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+  {% if current_bidder == true %}
+  <script>
+    var current_bidder = true;
+    var bidding_round = {{ db_game.bidding_round }};
+  </script>
+  {% endif %}
+  <script src="../static/app.js"></script>
+</head>
+<body>
+  <div id="foo" class="sidebar">
+    <table>
+      <tr>
+        <th></th>
+        <th>Team 1</th>
+        <th>Team 2</th>
+      </tr>
+      <tr>
+        <td>Overall</td>
+        <td id="team1_overall">{{ db_game.team1_score_overall }}</td>
+        <td id="team2_overall">{{ db_game.team2_score_overall }}</td>
+      </tr>
+      <tr>
+        <td>This round</td>
+        <td id="team1_round">{{ db_game.team1_score_round }}</td>
+        <td id="team2_round">{{ db_game.team2_score_round }}</td>
+      </tr>
+    </table>
+    {%- set suit_symbols = { 'S' : '♠',
+                             'C' : '♣',
+                             'H' : '♥',
+                             'D' : '♦',
+                           }
+    -%}
+    <p id="trump-info">Trump: {{ suit_symbols[db_game.trump] }}</p>
+    <textarea id="log" disabled></textarea>
+  </div>
+  <div class="bidding">
+    <h2>Make your bid:</h2>
+    <div id="upturned-card" class="hand">
+      <div class="card suit{{ suit_symbols[db_game.deck[1]] }}">
+        {%- if db_game.deck[0] == 'T' -%}
+        <p class="card-top">10</p>
+        {%- else -%}
+        <p class="card-top">{{ db_game.deck[0] }}</p>
+        {%- endif -%}
+        <p class="card-center">{{ suit_symbols[db_game.deck[1]] }}</p>
+        {%- if db_game.deck[0] == 'T' -%}
+        <p class="card-bottom">10</p>
+        {%- else -%}
+        <p class="card-bottom">{{ db_game.deck[0] }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+    <span id="suits">
+      <span id="H" class="choice">♥</span>
+      <span id="C" class="choice">♣</span>
+      <span id="S" class="choice">♠</span>
+      <span id="D" class="choice">♦</span>
+      <br>
+    </span>
+    <div class="other-choices">
+      <button id="pick-it-up">Pick it up</button>
+      <button id="pass">Pass</button>
+      <br>
+      <input id="loner" type="checkbox"> Loner
+    </div>
+  </div>
+
+  <div class="content">
+    <div id="played-cards" class="hand">
+      <h2>Played Cards:</h2>
+      {% for item in played_cards %}
+      {%- if item != '--' -%}
+      <div class="card suit{{ suit_symbols[item[1]] }}">
+      {%- if item[0] == 'T' -%}
+      <p class="card-top">10</p>
+      {%- else -%}
+      <p class="card-top">{{ item[0] }}</p>
+      {%- endif -%}
+      <p class="card-center">{{ suit_symbols[item[1]] }}</p>
+      {%- if item[0] == 'T' -%}
+      <p class="card-bottom">10</p>
+      {%- else -%}
+      <p class="card-bottom">{{ item[0] }}</p>
+      {%- endif -%}
+      </div>
+      {%- endif -%}
+      {% endfor %}
+    </div>
+    <div id="your-cards" class="hand">
+      <h2>Your Cards:</h2>
+      {% for item in player_cards %}
+      <div id="{{ loop.index0 }}" class="card suit{{ suit_symbols[item[1]] }}">
+      {%- if item[0] == 'T' -%}
+      <p class="card-top">10</p>
+      {%- else -%}
+      <p class="card-top">{{ item[0] }}</p>
+      {%- endif -%}
+      <p class="card-center">{{ suit_symbols[item[1]] }}</p>
+      {%- if item[0] == 'T' -%}
+      <p class="card-bottom">10</p>
+      {%- else -%}
+      <p class="card-bottom">{{ item[0] }}</p>
+      {%- endif -%}
+      </div>
+      {% endfor %}
+  </div>
+</body>
+</html>

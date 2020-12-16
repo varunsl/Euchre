@@ -1,0 +1,13 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+<script>
+var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+socket.on('enough_players', function(data) {
+  if (data.enough == true && data.gameID == "{{ gameID }}"){
+    window.location.reload(true);
+  }
+});
+</script>
+Waiting for more players....
+
+Share this Game ID to let others join this game: {{ gameID }}
